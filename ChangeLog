@@ -1,3 +1,7 @@
+2011-10-28  Matthias Wimmer  <m@tthias.eu>
+
+    * man/couriergrey.8.in: added man file
+
 2011-10-20  Matthias Wimmer  <m@tthias.eu>
 
     * configure.ac: minor updates in the build environment

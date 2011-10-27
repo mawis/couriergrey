@@ -1,4 +1,4 @@
-SUBDIRS = intl m4 po 
+SUBDIRS = intl m4 man po 
 
 bin_PROGRAMS = couriergrey
 

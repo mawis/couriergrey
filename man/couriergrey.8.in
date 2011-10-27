@@ -1,0 +1,41 @@
+.TH couriergrey 8 "27 Oct 2011" "@VERSION@" "couriergrey project"
+.SH NAME
+couriergrey \- greylisting filter for Courier MTA
+.SH SYNOPSIS
+.B couriergrey
+.I [OPTION]
+.SH DESCRIPTION
+.BR couriergrey
+is an implementation of the Courier MTA mail filter interface, that
+implements the greylist filtering method.
+.SH OPTIONS
+.TP
+.B \-v, \-\-version
+print software version
+.TP
+.B \-s, \-\-socket=PATH
+location of the filter domain socket
+.TP
+.B \-w, \-\-whitelist=PATH
+location of the whitelist file
+.TP
+.B \-\-dumpwhitelist
+dump the content of the parsed whitelist (may be used to debug the
+whitelist file)
+.TP
+.B \-?, \-\-help
+show help message on available options
+.TP
+.B \-\-usage
+display brief usage message
+.SS Exit states
+.TP
+.B 0
+couriergrey exited normally
+.TP
+.B 1
+couriergrey had problems starting up
+.SH SEE ALSO
+.BR courierfilter (8)
+.SH AUTHOR
+Matthias Wimmer

@@ -103,4 +103,4 @@ AC_DEFINE_DIR(CONFIG_DIR,sysconfdir,[where the configuration file can be found])
 AC_DEFINE_DIR(STATE_DIR,localstatedir,[where the socket is created in])
 
 dnl Create the makefiles
-AC_OUTPUT(Makefile intl/Makefile po/Makefile.in m4/Makefile )
+AC_OUTPUT(Makefile intl/Makefile po/Makefile.in m4/Makefile man/Makefile )

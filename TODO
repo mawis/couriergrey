@@ -1,0 +1,11 @@
+What is left to do
+==================
+
+- Detect mail that has been received with authentication
+  (AUTH in the first Received header from the right IP
+  address.)
+- Whitelisting by IP and/or destination
+- Configuration file for locations and greylisting time
+- Cleanup of aged entries in the database
+- Think about reducing the blocksize of the database
+- Autowhitelisting for senders that have received mails

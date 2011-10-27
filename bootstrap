@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if test ! -d intl; then
+	autopoint
+fi
+
+# Fire up autotools
+libtoolize --force && aclocal $ACLOCAL_FLAGS && autoheader && automake --include-deps --add-missing && autoconf

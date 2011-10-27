@@ -1,0 +1,18 @@
+2011-10-20  Matthias Wimmer  <m@tthias.eu>
+
+    * configure.ac: minor updates in the build environment
+
+2007-09-30  Matthias Wimmer  <m@tthias.eu>
+
+    * couriergrey.cc: whitelisting support
+    * couriergrey.h: same
+
+2007-09-26  Matthias Wimmer  <m@tthias.eu>
+
+    * couriergrey.cc: use SMTP code 451 instead of 450, it is said some
+	servers will handle that better
+
+2007-09-21  Matthias Wimmer  <m@tthias.eu>
+
+    * couriergrey.h: detect mail that has been received by authenticated SMTP
+    * couriergrey.cc: same

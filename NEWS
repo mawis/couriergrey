@@ -1,0 +1,19 @@
+Version 0.2.0
+
+    - Support for whitelists.
+
+Version 0.1.2
+
+    - Use SMTP code 451 instead of 450 if mail is rejected for greylisting.
+      It is said, that some mail server have problems handling SMTP response
+      code 450 as they consider it to be a locking problem and will do
+      very fast retries.
+
+Version 0.1.1
+
+    - Detection of mails that have been received authenticated. Such mails
+      will not get greylisted.
+
+Version 0.1.0
+
+    - Initial version.

@@ -400,57 +400,31 @@ namespace couriergrey {
 		mail_identifier << "/" << *p;
 	    }
 
-	    // open the database (10 tries)
-	    ::GDBM_FILE db = NULL;
-	    for (int retry = 0; db == NULL && retry < 10; retry++) {
-		db = ::gdbm_open(LOCALSTATEDIR "/cache/" PACKAGE "/deliveryattempts.gdbm", 0, GDBM_WRCREAT, S_IRUSR | S_IWUSR | S_IRGRP, 0);
+	    // open the database
+	    try {
+		database db;
 
-		if (db == NULL && retry < 9) {
-		    ::sleep(1);
-		}
-	    }
-
-	    // database open?
-	    if (db == NULL) {
-		// XXX log error
-
-		response = "430 Greylisting DB could not be opened currently. Please try again later: ";
-		response += ::gdbm_strerror(::gdbm_errno);
-	    } else {
-		::datum key;
 		std::string mail_identifier_string = mail_identifier.str();
-		key.dptr = const_cast<char*>(mail_identifier_string.c_str());
-		key.dsize = mail_identifier_string.length();
 
-		// check if we have an entry for this delivery attempt in the database
-		::datum value = ::gdbm_fetch(db, key);
+		std::string value = db.fetch(mail_identifier_string);
 
 		// check when there has been the first delivery attempt for this mail
 		std::time_t first_delivery = 0;
-		if (value.dptr == NULL) {
+		if (value.empty()) {
 		    // new mail, first attempt is now ...
 		    first_delivery = std::time(NULL);
 		} else {
-		    // mail is already in the database, read first attempt from there
-		    std::string value_string(value.dptr, value.dsize);
-		    std::free(value.dptr);
-
-		    std::istringstream value_stream(value_string);
+		    // mail relation is already in the database, read first attempt from there
+		    std::istringstream value_stream(value);
 		    value_stream >> first_delivery;
 		}
 
-		// write the new value (first attempt + last access for cleanup) to the database
+		// update the content (first attempt + last access for cleanup) in the database
 		std::ostringstream value_stream;
 		value_stream << first_delivery << " " << std::time(NULL);
-		std::string value_string = value_stream.str();
-		value.dptr = const_cast<char*>(value_string.c_str());
-		value.dsize = value_string.length();
-		::gdbm_store(db, key, value, GDBM_INSERT);
+		db.store(mail_identifier_string, value_stream.str());
 
-		// close the database again
-		::gdbm_close(db);
-
-		// check if the first attempt for this mail is old enough so that we can accept the mail
+		// check if the first attempt for this mail is old enought so that we can accept the mail
 		std::time_t seconds_to_wait = (first_delivery + 120) - std::time(NULL);
 		if (seconds_to_wait <= 0) {
 		    response = "200 Thank you, we accept this e-mail.";
@@ -459,6 +433,9 @@ namespace couriergrey {
 		    response_stream << "451 You are greylisted, please try again in " << seconds_to_wait << " s.";
 		    response = response_stream.str();
 		}
+	    } catch (Glib::ustring msg) {
+		response = "430 Greylisting DB could not be opened currently. Please try again later: ";
+		response += msg;
 	    }
 	}
 
@@ -507,7 +484,19 @@ namespace couriergrey {
 	// get the entry for this key
 	::datum value = ::gdbm_fetch(db, key_datum);
 
-	return std::string(value.dptr, value.dsize);
+	// anything found?
+	if (!value.dptr) {
+	    return std::string();
+	}
+
+	// convert to string
+	std::string result = std::string(value.dptr, value.dsize);
+
+	// free memory
+	std::free(value.dptr);
+
+	// return result
+	return result;
     }
 
     void database::store(std::string const& key, std::string const& value) {

@@ -35,47 +35,13 @@
 
 #include <netinet/in.h>
 
+#include <database.h>
+
 #ifndef N_
 #   define N_(n) (n)
 #endif
 
 namespace couriergrey {
-    /**
-     * class storing the learned data
-     */
-    class database {
-	public:
-	    /**
-	     * create a database instance
-	     */
-	    database();
-
-	    /**
-	     * destruct a database instance
-	     */
-	    ~database();
-
-	    /**
-	     * fetch a value from a key
-	     */
-	    std::string fetch(std::string const& key) const;
-
-	    /**
-	     * store a value to a key
-	     */
-	    void store(std::string const& key, std::string const& value);
-
-	    /**
-	     * get all the keys in the database
-	     */
-	    std::list<std::string> get_keys();
-	private:
-	    /**
-	     * The GDMB database handle
-	     */
-	    ::GDBM_FILE db;
-    };
-
     /**
      * class storing IP address ranges, that are whitelisted
      */

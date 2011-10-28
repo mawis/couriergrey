@@ -2,6 +2,8 @@
 
     * couriergrey.cc: separate database access to its own class
     * couriergrey.h: same
+    * database.cc: added class to access gdbm database
+    * database.h: same
     * man/couriergrey.8.in: added man file
 
 2011-10-20  Matthias Wimmer  <m@tthias.eu>

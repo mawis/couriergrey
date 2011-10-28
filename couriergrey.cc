@@ -38,7 +38,6 @@
 #include <sstream>
 #include <fstream>
 #include <list>
-#include <gdbm.h>
 #include <ctime>
 #include <syslog.h>
 #include <netinet/in.h>
@@ -475,11 +474,76 @@ namespace couriergrey {
 	// free our instance again
 	delete this;
     }
+
+
+    database::database() : db(NULL) {
+	for (int retry = 0; db == NULL && retry < 10; retry++) {
+	    db = ::gdbm_open(LOCALSTATEDIR "/cache/" PACKAGE "/deliveryattempts.gdbm", 0, GDBM_WRCREAT, S_IRUSR | S_IWUSR | S_IRGRP, 0);
+
+	    if (db == NULL && retry < 9) {
+		::sleep(1);
+	    }
+	}
+
+	if (!db) {
+	    throw Glib::ustring(N_("Could not open database at " LOCALSTATEDIR "/cache/" PACKAGE "/deliveryattempts.gdbm"));
+	}
+    }
+
+    database::~database() {
+	// close the database again
+	if (db) {
+	    ::gdbm_close(db);
+	    db = NULL;
+	}
+    }
+
+    std::string database::fetch(std::string const& key) const {
+	// generate key
+	::datum key_datum;
+	key_datum.dptr = const_cast<char*>(key.c_str());
+	key_datum.dsize = key.length();
+
+	// get the entry for this key
+	::datum value = ::gdbm_fetch(db, key_datum);
+
+	return std::string(value.dptr, value.dsize);
+    }
+
+    void database::store(std::string const& key, std::string const& value) {
+	// generate key
+	::datum key_datum;
+	key_datum.dptr = const_cast<char*>(key.c_str());
+	key_datum.dsize = key.length();
+
+	// generate value
+	::datum value_datum;
+	value_datum.dptr = const_cast<char*>(value.c_str());
+	value_datum.dsize = value.length();
+	::gdbm_store(db, key_datum, value_datum, GDBM_INSERT);
+    }
+
+    std::list<std::string> database::get_keys() {
+	std::list<std::string> result;
+
+	for (::datum key = ::gdbm_firstkey(db); key.dptr; key = ::gdbm_nextkey(db, key)) {
+	    try {
+		result.push_back(std::string(key.dptr, key.dsize));
+	    } catch (std::length_error) {
+		std::cerr << "Length error!" << std::endl;
+		std::cerr << "Lenght is: " << key.dsize << std::endl;
+		std::cerr << "Key is: " << key.dptr << std::endl;
+	    }
+	}
+
+	return result;
+    }
 }
 
 int main(int argc, char const** argv) {
     int do_version = 0;
     int dump_whitelist = 0;
+    int dump_database = 0;
     int ret = 0;
     char const* socket_location = LOCALSTATEDIR "/lib/courier/allfilters/couriergrey";
     char const* whitelist_location = CONFIG_DIR "/whitelist_ip";
@@ -489,6 +553,7 @@ int main(int argc, char const** argv) {
 	{ "socket", 's', POPT_ARG_STRING, &socket_location, 0, N_("location of the filter domain socket"), "path"},
 	{ "whitelist", 'w', POPT_ARG_STRING, &whitelist_location, 0, N_("location of the whitelist file"), "path"},
 	{ "dumpwhitelist", 0, POPT_ARG_NONE, &dump_whitelist, 0, N_("dump the content of the parsed whitelist"), NULL},
+	{ "dumpdatabase", 0, POPT_ARG_NONE, &dump_database, 0, N_("dump the content of the greylisting database"), NULL},
 	POPT_AUTOHELP
 	POPT_TABLEEND
     };
@@ -541,6 +606,25 @@ int main(int argc, char const** argv) {
 	used_whitelist.dump();
 	::closelog();
 	return 0;
+    }
+
+    // dump database if requested
+    if (dump_database) {
+	try {
+	    couriergrey::database db;
+
+	    std::cout << N_("Content of the greylist database:") << std::endl;
+
+	    std::list<std::string> keys = db.get_keys();
+	    for (std::list<std::string>::const_iterator p = keys.begin(); p != keys.end(); ++p) {
+		std::cout << *p << std::endl;
+		std::cout << "\t \\ " << db.fetch(*p) << std::endl;
+	    }
+	    return 0;
+	} catch (Glib::ustring msg) {
+	    std::cerr << msg << std::endl;
+	    return 1;
+	}
     }
 
     // open the domain socket

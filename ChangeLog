@@ -1,3 +1,8 @@
+2011-10-30  Matthias Wimmer  <m@tthias.eu>
+
+    * timestore.cc: encapsulate parsing of database values
+    * timestore.h: same
+
 2011-10-28  Matthias Wimmer  <m@tthias.eu>
 
     * couriergrey.cc: separate database access to its own class

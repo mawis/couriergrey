@@ -113,14 +113,30 @@ int main(int argc, char const** argv) {
     // dump database if requested
     if (dump_database) {
 	try {
-	    couriergrey::database db;
+	    couriergrey::timestore db;
 
 	    std::cout << N_("Content of the greylist database:") << std::endl;
 
 	    std::list<std::string> keys = db.get_keys();
 	    for (std::list<std::string>::const_iterator p = keys.begin(); p != keys.end(); ++p) {
 		std::cout << *p << std::endl;
-		std::cout << "\t \\ " << db.fetch(*p) << std::endl;
+		std::pair<std::time_t, std::time_t> times = db.fetch(*p);
+		struct std::tm first_time_tm;
+		gmtime_r(&times.first, &first_time_tm);
+		struct std::tm last_time_tm;
+		gmtime_r(&times.second, &last_time_tm);
+		char first_time[128];
+		char last_time[128];
+		std::size_t first_time_size = strftime(first_time, sizeof(first_time), "%Y-%m-%dT%H:%M:%SZ", &first_time_tm);
+		std::size_t last_time_size = strftime(last_time, sizeof(last_time), "%Y-%m-%dT%H:%M:%SZ", &last_time_tm);
+		std::cout << "\t";
+		if (first_time_size > 0) {
+		    std::cout << first_time << " ";
+		}
+		if (last_time_size > 0) {
+		    std::cout << last_time;
+		}
+		std::cout << std::endl;
 	    }
 	    return 0;
 	} catch (Glib::ustring msg) {

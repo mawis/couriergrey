@@ -18,17 +18,59 @@
  * ---------------------------------------------------------------------------
  */
 
-#ifndef COURIERGREY_H
-#define COURIERGREY_H
+#ifndef TIMESTORE_H
+#define TIMESTORE_H
 
 #ifdef HAVE_CONFIG_H
 #   include <config.h>
 #endif
 
-#include <database.h>
-#include <timestore.h>
-#include <whitelist.h>
-#include <mail_processor.h>
-#include <message_processor.h>
+#include <string>
+#include <list>
+#include <ctime>
 
-#endif // COURIERGREY_H
+#include <database.h>
+
+#ifndef N_
+#   define N_(n) (n)
+#endif
+
+namespace couriergrey {
+    /**
+     * class storing the learned data
+     */
+    class timestore {
+	public:
+	    /**
+	     * create a timestore instance
+	     */
+	    timestore();
+
+	    /**
+	     * destruct a timestore instance
+	     */
+	    ~timestore();
+
+	    /**
+	     * fetch a value from a key
+	     */
+	    std::pair<std::time_t, std::time_t> fetch(std::string const& key) const;
+
+	    /**
+	     * store a value to a key
+	     */
+	    void store(std::string const& key, std::time_t first_connect, std::time_t last_connect);
+
+	    /**
+	     * get all the keys in the timestore
+	     */
+	    std::list<std::string> get_keys();
+	private:
+	    /**
+	     * The database we use
+	     */
+	    database db;
+    };
+}
+
+#endif // TIMESTORE_H

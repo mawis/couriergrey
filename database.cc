@@ -28,8 +28,6 @@
 #include <cstdio>
 #include <glibmm.h>
 
-#define SOCKET_BACKLOG_SIZE 10
-
 namespace couriergrey {
     database::database() : db(NULL) {
 	for (int retry = 0; db == NULL && retry < 10; retry++) {
@@ -87,7 +85,7 @@ namespace couriergrey {
 	::datum value_datum;
 	value_datum.dptr = const_cast<char*>(value.c_str());
 	value_datum.dsize = value.length();
-	::gdbm_store(db, key_datum, value_datum, GDBM_INSERT);
+	::gdbm_store(db, key_datum, value_datum, GDBM_REPLACE);
     }
 
     std::list<std::string> database::get_keys() {

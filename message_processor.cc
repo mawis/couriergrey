@@ -23,7 +23,7 @@
 #endif
 
 #include "message_processor.h"
-#include "database.h"
+#include "timestore.h"
 #include "mail_processor.h"
 #include <iostream>
 #include <cstring>
@@ -183,27 +183,16 @@ namespace couriergrey {
 
 	    // open the database
 	    try {
-		database db;
+		timestore db;
 
 		std::string mail_identifier_string = mail_identifier.str();
 
-		std::string value = db.fetch(mail_identifier_string);
-
 		// check when there has been the first delivery attempt for this mail
-		std::time_t first_delivery = 0;
-		if (value.empty()) {
-		    // new mail, first attempt is now ...
-		    first_delivery = std::time(NULL);
-		} else {
-		    // mail relation is already in the database, read first attempt from there
-		    std::istringstream value_stream(value);
-		    value_stream >> first_delivery;
-		}
+		std::pair<std::time_t, std::time_t> value = db.fetch(mail_identifier_string);
+		std::time_t first_delivery = value.first;
 
 		// update the content (first attempt + last access for cleanup) in the database
-		std::ostringstream value_stream;
-		value_stream << first_delivery << " " << std::time(NULL);
-		db.store(mail_identifier_string, value_stream.str());
+		db.store(mail_identifier_string, first_delivery, std::time(NULL));
 
 		// check if the first attempt for this mail is old enought so that we can accept the mail
 		std::time_t seconds_to_wait = (first_delivery + 120) - std::time(NULL);

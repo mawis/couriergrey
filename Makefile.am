@@ -2,11 +2,11 @@ SUBDIRS = intl m4 man po
 
 bin_PROGRAMS = couriergrey
 
-noinst_HEADERS = couriergrey.h database.h mail_processor.h message_processor.h whitelist.h
+noinst_HEADERS = couriergrey.h database.h mail_processor.h message_processor.h timestore.h whitelist.h
 
 sysconf_DATA = whitelist_ip.dist
 
-couriergrey_SOURCES = couriergrey.cc database.cc mail_processor.cc message_processor.cc whitelist.cc
+couriergrey_SOURCES = couriergrey.cc database.cc mail_processor.cc message_processor.cc timestore.cc whitelist.cc
 
 couriergrey_LDFLAGS = @LDFLAGS@
 

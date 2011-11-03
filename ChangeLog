@@ -1,3 +1,7 @@
+2011-11-03  Matthias Wimmer  <m@tthias.eu>
+
+    * database.cc: adding missing include
+
 2011-10-30  Matthias Wimmer  <m@tthias.eu>
 
     * timestore.cc: encapsulate parsing of database values

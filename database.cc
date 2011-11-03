@@ -26,6 +26,7 @@
 #include <iostream>
 #include <sys/stat.h>
 #include <cstdio>
+#include <stdexcept>
 #include <glibmm.h>
 
 namespace couriergrey {
@@ -94,7 +95,7 @@ namespace couriergrey {
 	for (::datum key = ::gdbm_firstkey(db); key.dptr; key = ::gdbm_nextkey(db, key)) {
 	    try {
 		result.push_back(std::string(key.dptr, key.dsize));
-	    } catch (std::length_error) {
+	    } catch (std::length_error len_err) {
 		std::cerr << "Length error!" << std::endl;
 		std::cerr << "Lenght is: " << key.dsize << std::endl;
 		std::cerr << "Key is: " << key.dptr << std::endl;

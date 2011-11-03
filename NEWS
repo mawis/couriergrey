@@ -1,3 +1,10 @@
+Version 0.3.0
+
+    - Internal restructuring.
+    - Fix: Couriergrey crashed in some rare cases.
+    - New parameter --dumpdatabase to dump the content of the internal
+      database where couriergrey stores the timestamps.
+
 Version 0.2.0
 
     - Support for whitelists.

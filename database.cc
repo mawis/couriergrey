@@ -97,7 +97,7 @@ namespace couriergrey {
 		result.push_back(std::string(key.dptr, key.dsize));
 	    } catch (std::length_error len_err) {
 		std::cerr << "Length error!" << std::endl;
-		std::cerr << "Lenght is: " << key.dsize << std::endl;
+		std::cerr << "Length is: " << key.dsize << std::endl;
 		std::cerr << "Key is: " << key.dptr << std::endl;
 	    }
 	}

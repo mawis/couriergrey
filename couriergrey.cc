@@ -46,6 +46,7 @@ int main(int argc, char const** argv) {
     int do_version = 0;
     int dump_whitelist = 0;
     int dump_database = 0;
+    int expire_database = 0;
     int ret = 0;
     char const* socket_location = LOCALSTATEDIR "/lib/courier/allfilters/couriergrey";
     char const* whitelist_location = CONFIG_DIR "/whitelist_ip";
@@ -54,6 +55,7 @@ int main(int argc, char const** argv) {
 	{ "version", 'v', POPT_ARG_NONE, &do_version, 0, N_("print server version"), NULL},
 	{ "socket", 's', POPT_ARG_STRING, &socket_location, 0, N_("location of the filter domain socket"), "path"},
 	{ "whitelist", 'w', POPT_ARG_STRING, &whitelist_location, 0, N_("location of the whitelist file"), "path"},
+	{ "expire", 'e', POPT_ARG_INT, &expire_database, 0, N_("expire old database entries"), "days"},
 	{ "dumpwhitelist", 0, POPT_ARG_NONE, &dump_whitelist, 0, N_("dump the content of the parsed whitelist"), NULL},
 	{ "dumpdatabase", 0, POPT_ARG_NONE, &dump_database, 0, N_("dump the content of the greylisting database"), NULL},
 	POPT_AUTOHELP
@@ -108,6 +110,22 @@ int main(int argc, char const** argv) {
 	used_whitelist.dump();
 	::closelog();
 	return 0;
+    }
+
+    // expire database if requested
+    if (expire_database > 0) {
+	try {
+	    couriergrey::timestore db;
+
+	    std::cout << N_("Expiring database entries older than ") << expire_database << N_(" days.") << std::endl;
+
+	    db.expire(expire_database);
+
+	    return 0;
+	} catch (Glib::ustring msg) {
+	    std::cerr << msg << std::endl;
+	    return 1;
+	}
     }
 
     // dump database if requested

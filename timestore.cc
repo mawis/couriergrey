@@ -23,6 +23,7 @@
 #endif
 
 #include "timestore.h"
+#include <iostream>
 #include <sstream>
 
 namespace couriergrey {
@@ -60,5 +61,21 @@ namespace couriergrey {
 
     std::list<std::string> timestore::get_keys() {
 	return db.get_keys();
+    }
+
+    void timestore::expire(int days) {
+	std::time_t now = std::time(NULL);
+
+	std::list<std::string> const keys = get_keys();
+	for (std::list<std::string>::const_iterator p = keys.begin(); p != keys.end(); ++p) {
+	    std::pair<std::time_t, std::time_t> times = fetch(*p);
+
+	    if (now - times.second > days * 86400) {
+		std::cout << "Expiring: " << *p << std::endl;
+		db.del(*p);
+	    }
+	}
+
+	db.reorganize();
     }
 }

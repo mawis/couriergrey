@@ -89,6 +89,20 @@ namespace couriergrey {
 	::gdbm_store(db, key_datum, value_datum, GDBM_REPLACE);
     }
 
+    void database::reorganize() {
+	::gdbm_reorganize(db);
+    }
+
+    void database::del(std::string const& key) {
+	// generate key
+	::datum key_datum;
+	key_datum.dptr = const_cast<char*>(key.c_str());
+	key_datum.dsize = key.length();
+
+	// delete database entry
+	::gdbm_delete(db, key_datum);
+    }
+
     std::list<std::string> database::get_keys() {
 	std::list<std::string> result;
 

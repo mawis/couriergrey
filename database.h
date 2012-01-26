@@ -61,6 +61,18 @@ namespace couriergrey {
 	    void store(std::string const& key, std::string const& value);
 
 	    /**
+	     * delete the value of a key
+	     *
+	     * @param key the key to delete
+	     */
+	    void del(std::string const& key);
+
+	    /**
+	     * reorganize (compact) the database
+	     */
+	    void reorganize();
+
+	    /**
 	     * get all the keys in the database
 	     */
 	    std::list<std::string> get_keys();

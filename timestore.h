@@ -62,6 +62,13 @@ namespace couriergrey {
 	    void store(std::string const& key, std::time_t first_connect, std::time_t last_connect);
 
 	    /**
+	     * expire old entires in the timestamp
+	     *
+	     * @param days number of days to keep
+	     */
+	    void expire(int days);
+
+	    /**
 	     * get all the keys in the timestore
 	     */
 	    std::list<std::string> get_keys();

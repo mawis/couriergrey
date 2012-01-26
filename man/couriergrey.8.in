@@ -1,4 +1,4 @@
-.TH couriergrey 8 "27 Oct 2011" "@VERSION@" "couriergrey project"
+.TH couriergrey 8 "26 Jan 2012" "@VERSION@" "couriergrey project"
 .SH NAME
 couriergrey \- greylisting filter for Courier MTA
 .SH SYNOPSIS
@@ -18,6 +18,9 @@ location of the filter domain socket
 .TP
 .B \-w, \-\-whitelist=PATH
 location of the whitelist file
+.TP
+.B \-e, \-\-expire=DAYS
+expire database entries older than this number of days
 .TP
 .B \-\-dumpwhitelist
 dump the content of the parsed whitelist (may be used to debug the

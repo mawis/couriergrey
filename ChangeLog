@@ -5,6 +5,7 @@
     * database.h: same
     * timestore.cc: same
     * timestore.h: same
+    * man/Makefile.am: fix problem in man generation
 
 2011-11-03  Matthias Wimmer  <m@tthias.eu>
 

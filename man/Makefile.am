@@ -1,5 +1,5 @@
 man_MANS = couriergrey.8
-EXTRA_DIST = couriergrey.8
+EXTRA_DIST = couriergrey.8.in
 
 edit = sed \
        -e 's,\@VERSION\@,$(VERSION),g'

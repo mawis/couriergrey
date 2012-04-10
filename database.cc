@@ -30,6 +30,7 @@
 #include <cstdio>
 #include <stdexcept>
 #include <glibmm.h>
+#include <unistd.h>
 
 namespace couriergrey {
     database::database() : db(NULL) {

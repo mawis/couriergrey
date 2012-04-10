@@ -1,3 +1,7 @@
+2012-04-10  Matthias Wimmer  <m@tthias.eu>
+
+    * database.cc: gcc 4.7 fix (patch by Cyril Brulebois <kibi@debian.org>)
+
 2012-01-30  Matthias Wimmer  <m@tthias.eu>
 
     * couriergrey.cc: detecting thread problems, flagging accepted database

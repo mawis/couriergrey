@@ -149,6 +149,9 @@ int main(int argc, char const** argv) {
 		char last_time[128];
 		std::size_t first_time_size = strftime(first_time, sizeof(first_time), "%Y-%m-%dT%H:%M:%SZ", &first_time_tm);
 		std::size_t last_time_size = strftime(last_time, sizeof(last_time), "%Y-%m-%dT%H:%M:%SZ", &last_time_tm);
+		if (times.second - times.first >= 120) {
+		    std::cout << " A";
+		}
 		std::cout << "\t";
 		if (first_time_size > 0) {
 		    std::cout << first_time << " ";
@@ -270,7 +273,11 @@ int main(int argc, char const** argv) {
 		int accepted_connection = ::accept(domain_socket, NULL, 0);
 
 		couriergrey::message_processor* processor = new couriergrey::message_processor(accepted_connection, used_whitelist);
-		Glib::Thread::create(sigc::mem_fun(*processor, &couriergrey::message_processor::do_process), false);
+		try {
+		    Glib::Thread::create(sigc::mem_fun(*processor, &couriergrey::message_processor::do_process), false);
+		} catch (Glib::ThreadError const& te) {
+		    ::syslog(LOG_INFO, "ThreadError caught in main thread: %s", te.what().c_str());
+		}
 	    }
 	} else {
 	    std::clog << "XXX Returned without event ..." << std::endl;

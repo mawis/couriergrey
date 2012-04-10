@@ -1,3 +1,8 @@
+2012-01-30  Matthias Wimmer  <m@tthias.eu>
+
+    * couriergrey.cc: detecting thread problems, flagging accepted database
+	entries
+
 2012-01-26  Matthias Wimmer  <m@tthias.eu>
 
     * couriergrey.cc: expire old entries in the database

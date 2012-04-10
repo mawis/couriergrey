@@ -1,3 +1,8 @@
+Version 0.3.2
+
+    - Detect problems in creating new threads.
+    - Flagging entries as accepted, when dumping the database.
+
 Version 0.3.1
 
     - Support for expiring old entries in the database.

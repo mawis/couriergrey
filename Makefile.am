@@ -12,7 +12,7 @@ couriergrey_LDFLAGS = @LDFLAGS@
 
 ACLOCAL_AMFLAGS = -I m4
 
-EXTRA_DIST = config.rpath whitelist_ip.dist
+EXTRA_DIST = config.rpath whitelist_ip.dist README.md
 
 DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@
 

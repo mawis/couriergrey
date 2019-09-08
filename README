@@ -1,16 +1,1 @@
-You should create a cron job that expires your database from
-time to time.
-
-This cron job should call couriergrey with the arguments "-e 365" to
-expire entries, that are older than one year. Make sure that couriergrey
-is run as the user, that normally accesses the database. E.g. on a
-standard Debian system this is the user 'daemon'.
-
-On a Debian system, create the file /etc/cron.weekly/couriergrey with
-the following content:
-
-===[snip]===============================================================
-#! /bin/bash
-
-su -c "/usr/bin/couriergrey -e 365" daemon
-===[snip]===============================================================
+See README.md
